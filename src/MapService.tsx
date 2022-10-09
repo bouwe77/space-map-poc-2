@@ -6,8 +6,9 @@ import {
   useContext,
 } from 'react'
 import { InterpreterFrom } from 'xstate'
+import { send, start } from 'xstate/lib/actions'
 import mapMachine, { MapMachineState } from './mapMachine'
-import { Coordinate } from './types'
+import { Coordinate, Spaceship } from './types'
 import useSpaceship from './useSpaceship'
 
 const MapService = createContext({} as InterpreterFrom<typeof mapMachine>)
@@ -39,8 +40,11 @@ const useMapService = (): InterpreterFrom<typeof mapMachine> => {
 
 interface MapHookReturn {
   centerMapOnCoordinate: Coordinate
+  mouseOverCoordinate: Coordinate | null
   onMouseOver: (coordinate: Coordinate) => void
   onClick: (coordinate: Coordinate) => void
+  followSpaceship: (spaceship: Spaceship) => void
+  unfollowSpaceship: () => void
 }
 
 export const useMap = (): MapHookReturn => {
@@ -51,9 +55,14 @@ export const useMap = (): MapHookReturn => {
     (state: MapMachineState) => state.context.centerMapOnCoordinate,
   )
 
+  const mouseOverCoordinate = useSelector(
+    service,
+    (state: MapMachineState) => state.context.mouseOverCoordinate,
+  )
+
   const onMouseOver = useCallback(
     (coordinate: Coordinate) => {
-      console.log('MOUSE_OVER:', coordinate)
+      //console.log('MOUSE_OVER:', coordinate)
       service.send({ coordinate, type: 'MOUSE_OVER' })
     },
     [service],
@@ -61,16 +70,32 @@ export const useMap = (): MapHookReturn => {
 
   const onClick = useCallback(
     (coordinate: Coordinate) => {
-      console.log('CLICK:', coordinate)
+      //console.log('CLICK:', coordinate)
       service.send({ coordinate, type: 'CLICK' })
     },
     [service],
   )
 
+  const followSpaceship = useCallback(
+    (spaceship: Spaceship) => {
+      console.log('follow ' + spaceship.name)
+      service.send({ type: 'FOLLOW_SPACESHIP', spaceship })
+    },
+    [service],
+  )
+
+  const unfollowSpaceship = useCallback(() => {
+    console.log('unfollow')
+    service.send({ type: 'UNFOLLOW_SPACESHIP' })
+  }, [service])
+
   return {
     centerMapOnCoordinate,
+    mouseOverCoordinate,
     onMouseOver,
     onClick,
+    followSpaceship,
+    unfollowSpaceship,
   }
 }
 

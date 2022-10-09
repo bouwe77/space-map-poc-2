@@ -1,5 +1,5 @@
 import { createMachine, assign, StateFrom, ActorRefFrom } from 'xstate'
-import { Coordinate } from './types'
+import { Coordinate, Spaceship } from './types'
 
 const coordinateEquals = (coord1: Coordinate, coord2: Coordinate) =>
   coord1.x === coord2.x && coord1.y === coord2.y
@@ -19,13 +19,17 @@ type MapMachineEvents =
       type: 'CLICK'
       coordinate: Coordinate
     }
-// | {
-//       type: 'FOLLOW_SPACESHIP'
-//       name: string
-//     }
-//   | {
-//       type: 'UNFOLLOW_SPACESHIP'
-//     }
+  | {
+      type: 'FOLLOW_SPACESHIP'
+      spaceship: Spaceship
+    }
+  | {
+      type: 'UNFOLLOW_SPACESHIP'
+    }
+  | {
+      type: 'SPACESHIP_MOVED'
+      spaceship: Spaceship
+    }
 
 const mapMachine = createMachine(
   {
@@ -47,9 +51,23 @@ const mapMachine = createMachine(
       CLICK: {
         actions: 'setCenterMapOnCoordinate',
       },
+      FOLLOW_SPACESHIP: {
+        actions: ['setFollowingSpaceshipname', 'setCenterMapOnCoordinate2'],
+      },
     },
     states: {
       centeredOnMap: {},
+      followingSpaceship: {
+        on: {
+          SPACESHIP_MOVED: {
+            actions: 'setCenterMapOnCoordinate2',
+          },
+          UNFOLLOW_SPACESHIP: {
+            actions: 'clearFollowingSpaceshipname',
+            target: 'centeredOnMap',
+          },
+        },
+      },
     },
   },
   {
@@ -59,6 +77,15 @@ const mapMachine = createMachine(
       }),
       setCenterMapOnCoordinate: assign({
         centerMapOnCoordinate: (_, e) => e.coordinate,
+      }),
+      setCenterMapOnCoordinate2: assign({
+        centerMapOnCoordinate: (_, e) => e.spaceship.position,
+      }),
+      setFollowingSpaceshipname: assign({
+        followingSpaceshipName: (_, e) => e.spaceship.name,
+      }),
+      clearFollowingSpaceshipname: assign({
+        followingSpaceshipName: () => null,
       }),
     },
     guards: {

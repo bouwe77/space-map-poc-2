@@ -1,5 +1,7 @@
+import Coordinates from './Coordinates'
 import MapWrapper from './Map'
 import MapServiceProvider from './MapService'
+import { Spaceships } from './Spaceships'
 
 export const width = 400
 export const height = 400
@@ -30,6 +32,10 @@ function App() {
           />
         ))}
       </MapWrapper>
+      <div>
+        <Coordinates />
+        <Spaceships />
+      </div>
     </MapServiceProvider>
   )
 }

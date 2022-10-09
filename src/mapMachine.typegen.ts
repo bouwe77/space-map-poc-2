@@ -13,7 +13,10 @@ export interface Typegen0 {
     delays: never
   }
   eventsCausingActions: {
+    clearFollowingSpaceshipname: 'UNFOLLOW_SPACESHIP'
     setCenterMapOnCoordinate: 'CLICK'
+    setCenterMapOnCoordinate2: 'FOLLOW_SPACESHIP' | 'SPACESHIP_MOVED'
+    setFollowingSpaceshipname: 'FOLLOW_SPACESHIP'
     setMouseOverCoordinate: 'MOUSE_OVER'
   }
   eventsCausingServices: {}
@@ -21,6 +24,6 @@ export interface Typegen0 {
     isDifferentMouseOverCoordinate: 'MOUSE_OVER'
   }
   eventsCausingDelays: {}
-  matchesStates: 'centeredOnMap'
+  matchesStates: 'centeredOnMap' | 'followingSpaceship'
   tags: never
 }

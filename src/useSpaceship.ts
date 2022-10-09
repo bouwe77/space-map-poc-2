@@ -1,13 +1,9 @@
-import { Coordinate } from './types'
-
-interface Spaceship {
-  name: string
-  position: Coordinate
-}
+import { Coordinate, Spaceship } from './types'
 
 const spaceship: Spaceship = {
   name: 'dummy',
   position: { x: 100, y: 100 },
+  color: 'red',
 }
 
 /**
