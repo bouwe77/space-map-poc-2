@@ -1,3 +1,4 @@
+import ArrowKeys from './ArrowKeys'
 import Coordinates from './Coordinates'
 import MapWrapper from './Map'
 import MapServiceProvider from './MapService'
@@ -33,6 +34,7 @@ function App() {
         ))}
       </MapWrapper>
       <div>
+        <ArrowKeys />
         <Coordinates />
         <Spaceships />
       </div>

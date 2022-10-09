@@ -1,6 +1,8 @@
 import { createMachine, assign, StateFrom, ActorRefFrom } from 'xstate'
 import { Coordinate, Spaceship } from './types'
 
+export type Direction = 'up' | 'left' | 'right' | 'down'
+
 const coordinateEquals = (coord1: Coordinate, coord2: Coordinate) =>
   coord1.x === coord2.x && coord1.y === coord2.y
 
@@ -30,6 +32,10 @@ type MapMachineEvents =
       type: 'SPACESHIP_MOVED'
       spaceship: Spaceship
     }
+  | {
+      type: 'MOVE'
+      direction: Direction
+    }
 
 const mapMachine = createMachine(
   {
@@ -52,7 +58,10 @@ const mapMachine = createMachine(
         actions: 'setCenterMapOnCoordinate',
       },
       FOLLOW_SPACESHIP: {
-        actions: ['setFollowingSpaceshipname', 'setCenterMapOnCoordinate2'],
+        actions: ['setFollowingSpaceshipname', 'setCenterMapOnSpaceship'],
+      },
+      MOVE: {
+        actions: 'setCenterMapMove',
       },
     },
     states: {
@@ -60,7 +69,7 @@ const mapMachine = createMachine(
       followingSpaceship: {
         on: {
           SPACESHIP_MOVED: {
-            actions: 'setCenterMapOnCoordinate2',
+            actions: 'setCenterMapOnSpaceship',
           },
           UNFOLLOW_SPACESHIP: {
             actions: 'clearFollowingSpaceshipname',
@@ -78,7 +87,7 @@ const mapMachine = createMachine(
       setCenterMapOnCoordinate: assign({
         centerMapOnCoordinate: (_, e) => e.coordinate,
       }),
-      setCenterMapOnCoordinate2: assign({
+      setCenterMapOnSpaceship: assign({
         centerMapOnCoordinate: (_, e) => e.spaceship.position,
       }),
       setFollowingSpaceshipname: assign({
@@ -86,6 +95,31 @@ const mapMachine = createMachine(
       }),
       clearFollowingSpaceshipname: assign({
         followingSpaceshipName: () => null,
+      }),
+      setCenterMapMove: assign({
+        centerMapOnCoordinate: (ctx, e) => {
+          if (e.direction === 'up')
+            return {
+              ...ctx.centerMapOnCoordinate,
+              y: ctx.centerMapOnCoordinate.y - 10,
+            }
+          if (e.direction === 'left')
+            return {
+              ...ctx.centerMapOnCoordinate,
+              x: ctx.centerMapOnCoordinate.x - 10,
+            }
+          if (e.direction === 'right')
+            return {
+              ...ctx.centerMapOnCoordinate,
+              x: ctx.centerMapOnCoordinate.x + 10,
+            }
+          if (e.direction === 'down')
+            return {
+              ...ctx.centerMapOnCoordinate,
+              y: ctx.centerMapOnCoordinate.y + 10,
+            }
+          return ctx.centerMapOnCoordinate
+        },
       }),
     },
     guards: {

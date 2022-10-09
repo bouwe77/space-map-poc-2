@@ -7,7 +7,7 @@ import {
 } from 'react'
 import { InterpreterFrom } from 'xstate'
 import { send, start } from 'xstate/lib/actions'
-import mapMachine, { MapMachineState } from './mapMachine'
+import mapMachine, { Direction, MapMachineState } from './mapMachine'
 import { Coordinate, Spaceship } from './types'
 import useSpaceship from './useSpaceship'
 
@@ -45,6 +45,7 @@ interface MapHookReturn {
   onClick: (coordinate: Coordinate) => void
   followSpaceship: (spaceship: Spaceship) => void
   unfollowSpaceship: () => void
+  move: (direction: Direction) => void
 }
 
 export const useMap = (): MapHookReturn => {
@@ -89,6 +90,14 @@ export const useMap = (): MapHookReturn => {
     service.send({ type: 'UNFOLLOW_SPACESHIP' })
   }, [service])
 
+  const move = useCallback(
+    (direction: Direction) => {
+      console.log('move ' + direction)
+      service.send({ type: 'MOVE', direction })
+    },
+    [service],
+  )
+
   return {
     centerMapOnCoordinate,
     mouseOverCoordinate,
@@ -96,6 +105,7 @@ export const useMap = (): MapHookReturn => {
     onClick,
     followSpaceship,
     unfollowSpaceship,
+    move,
   }
 }
 
