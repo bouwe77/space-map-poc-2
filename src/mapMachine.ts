@@ -3,8 +3,7 @@ import { Coordinate, Spaceship } from './types'
 
 export type Direction = 'up' | 'left' | 'right' | 'down'
 
-const coordinateEquals = (coord1: Coordinate, coord2: Coordinate) =>
-  coord1.x === coord2.x && coord1.y === coord2.y
+const coordinateEquals = (coord1: Coordinate, coord2: Coordinate) => coord1.x === coord2.x && coord1.y === coord2.y
 
 interface MapMachineContext {
   centerMapOnCoordinate: Coordinate
@@ -124,8 +123,7 @@ const mapMachine = createMachine(
     },
     guards: {
       isDifferentMouseOverCoordinate: (ctx, e) =>
-        !ctx.mouseOverCoordinate ||
-        !coordinateEquals(e.coordinate, ctx.mouseOverCoordinate),
+        !ctx.mouseOverCoordinate || !coordinateEquals(e.coordinate, ctx.mouseOverCoordinate),
     },
   },
 )

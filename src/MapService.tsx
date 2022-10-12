@@ -79,20 +79,20 @@ export const useMap = (): MapHookReturn => {
 
   const followSpaceship = useCallback(
     (spaceship: Spaceship) => {
-      console.log('follow ' + spaceship.name)
+      // console.log('follow ' + spaceship.name)
       service.send({ type: 'FOLLOW_SPACESHIP', spaceship })
     },
     [service],
   )
 
   const unfollowSpaceship = useCallback(() => {
-    console.log('unfollow')
+    // console.log('unfollow')
     service.send({ type: 'UNFOLLOW_SPACESHIP' })
   }, [service])
 
   const move = useCallback(
     (direction: Direction) => {
-      console.log('move ' + direction)
+      // console.log('move ' + direction)
       service.send({ type: 'MOVE', direction })
     },
     [service],

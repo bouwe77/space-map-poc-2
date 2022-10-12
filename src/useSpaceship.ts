@@ -2,7 +2,7 @@ import { Coordinate, Spaceship } from './types'
 
 const spaceship: Spaceship = {
   name: 'dummy',
-  position: { x: 100, y: 100 },
+  position: { x: 0, y: 0 },
   color: 'red',
 }
 

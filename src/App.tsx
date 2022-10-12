@@ -4,13 +4,6 @@ import MapWrapper from './Map'
 import MapServiceProvider from './MapService'
 import { Spaceships } from './Spaceships'
 
-export const width = 400
-export const height = 400
-
-// Calculate center position for a planet:
-// center X = planet.x - (width/2)
-// center Y = planet.y - (height/2)
-
 const planets = [
   { name: 'A', x: 20, y: 50, color: 'yellow' },
   { name: 'B', x: 100, y: 130, color: 'green' },
@@ -24,13 +17,7 @@ function App() {
     <MapServiceProvider>
       <MapWrapper>
         {planets.map((planet) => (
-          <circle
-            cx={planet.x}
-            cy={planet.y}
-            r={20}
-            fill={planet.color}
-            key={planet.name}
-          />
+          <circle cx={planet.x} cy={planet.y} r={20} fill={planet.color} key={planet.name} />
         ))}
       </MapWrapper>
       <div>
