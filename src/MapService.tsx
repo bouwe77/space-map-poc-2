@@ -1,15 +1,9 @@
-import { useActor, useInterpret, useSelector } from '@xstate/react'
-import {
-  createContext,
-  PropsWithChildren,
-  useCallback,
-  useContext,
-} from 'react'
+import { useInterpret, useSelector } from '@xstate/react'
+import { createContext, PropsWithChildren, useCallback, useContext } from 'react'
 import { InterpreterFrom } from 'xstate'
-import { send, start } from 'xstate/lib/actions'
 import mapMachine, { Direction, MapMachineState } from './mapMachine'
 import { Coordinate, Spaceship } from './types'
-import useSpaceship from './useSpaceship'
+import { useSpaceship } from './useSpaceships'
 
 const MapService = createContext({} as InterpreterFrom<typeof mapMachine>)
 
@@ -26,15 +20,12 @@ const MapServiceProvider = ({ children }: PropsWithChildren) => {
     services: {},
   })
 
-  return (
-    <MapService.Provider value={mapService}>{children}</MapService.Provider>
-  )
+  return <MapService.Provider value={mapService}>{children}</MapService.Provider>
 }
 
 const useMapService = (): InterpreterFrom<typeof mapMachine> => {
   const ctx = useContext(MapService)
-  if (!ctx)
-    throw new Error('Only call useMapService within an MapServiceProvider')
+  if (!ctx) throw new Error('Only call useMapService within an MapServiceProvider')
   return ctx
 }
 
@@ -51,15 +42,9 @@ interface MapHookReturn {
 export const useMap = (): MapHookReturn => {
   const service = useMapService()
 
-  const centerMapOnCoordinate = useSelector(
-    service,
-    (state: MapMachineState) => state.context.centerMapOnCoordinate,
-  )
+  const centerMapOnCoordinate = useSelector(service, (state: MapMachineState) => state.context.centerMapOnCoordinate)
 
-  const mouseOverCoordinate = useSelector(
-    service,
-    (state: MapMachineState) => state.context.mouseOverCoordinate,
-  )
+  const mouseOverCoordinate = useSelector(service, (state: MapMachineState) => state.context.mouseOverCoordinate)
 
   const onMouseOver = useCallback(
     (coordinate: Coordinate) => {

@@ -1,46 +1,24 @@
-import { useMap } from './MapService'
-import { Spaceship } from './types'
+import { useSpaceships } from './useSpaceships'
 
-const spaceships = [
-  {
-    name: 'Enterprise',
-    position: { x: 0, y: 0 },
-    color: 'red',
-  },
-  {
-    name: 'Defiant',
-    position: { x: 320, y: 120 },
-    color: 'blue',
-  },
-  {
-    name: 'Voyager',
-    position: { x: 120, y: 130 },
-    color: 'green',
-  },
-]
+const Spaceships = () => {
+  console.log('rerender SPACESHIPS...')
 
-const useSpaceships = (): Spaceship[] => {
-  return spaceships
-}
-
-export const Spaceships = () => {
   const spaceships = useSpaceships()
-  const { followSpaceship, unfollowSpaceship } = useMap()
 
   return (
-    <div>
+    <>
       {spaceships.map((spaceship) => (
-        <div key={spaceship.name}>
-          <button
-            onClick={() => followSpaceship(spaceship)}
-            style={{ color: spaceship.color }}
-          >
-            {spaceship.name}
-          </button>
-          <br />
-        </div>
+        <rect
+          x={spaceship.position.x}
+          y={spaceship.position.y}
+          width={10}
+          height={10}
+          fill={spaceship.color}
+          key={spaceship.name}
+        />
       ))}
-      <button onClick={unfollowSpaceship}>unfollow</button>
-    </div>
+    </>
   )
 }
+
+export default Spaceships

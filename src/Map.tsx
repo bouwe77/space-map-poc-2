@@ -13,7 +13,7 @@ interface MapProps extends PropsWithChildren {
 }
 
 const Map = memo(({ children, onMouseMove, onClick, centerMapOnCoordinate }: MapProps) => {
-  console.log('RERENDER MAP...')
+  console.log('rerender MAP...')
 
   const mapRef = useSvgMouseEventCoordinates({
     mousemove: onMouseMove,
@@ -38,6 +38,7 @@ const Map = memo(({ children, onMouseMove, onClick, centerMapOnCoordinate }: Map
 /**
  * The MapWrapper makes sure the memoization of the Map component works, by passing the dependencies of Map as props.
  * This way, Map only rerenders if the props change, which in this case only can be the centerMapOnCoordinate prop.
+ * The other props are stable callbacks, or children that were already rendered higher up in the tree.
  * Map itself, internally, has nothing that can cause a rerender, because that would bypass the memoization.
  */
 const MapWrapper = ({ children }: PropsWithChildren) => {
