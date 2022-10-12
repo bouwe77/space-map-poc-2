@@ -14,8 +14,8 @@ export interface Typegen0 {
   }
   eventsCausingActions: {
     clearFollowingSpaceshipname: 'UNFOLLOW_SPACESHIP'
-    setCenterMapMove: 'MOVE'
-    setCenterMapOnCoordinate: 'CLICK'
+    setCenterMapMove: 'MOVE_PIN'
+    setCenterMapOnCoordinate: 'PIN'
     setCenterMapOnSpaceship: 'FOLLOW_SPACESHIP' | 'SPACESHIP_MOVED'
     setFollowingSpaceshipname: 'FOLLOW_SPACESHIP'
     setMouseOverCoordinate: 'MOUSE_OVER'

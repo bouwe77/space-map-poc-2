@@ -1,9 +1,11 @@
+import useFollowSpaceship from './useFollowSpaceship'
 import { useSpaceships } from './useSpaceships'
 
 const Spaceships = () => {
   console.log('rerender SPACESHIPS...')
 
   const spaceships = useSpaceships()
+  useFollowSpaceship()
 
   return (
     <>

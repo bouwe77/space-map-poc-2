@@ -17,8 +17,12 @@ type MapMachineEvents =
       coordinate: Coordinate
     }
   | {
-      type: 'CLICK'
+      type: 'PIN'
       coordinate: Coordinate
+    }
+  | {
+      type: 'MOVE_PIN'
+      direction: Direction
     }
   | {
       type: 'FOLLOW_SPACESHIP'
@@ -30,10 +34,6 @@ type MapMachineEvents =
   | {
       type: 'SPACESHIP_MOVED'
       spaceship: Spaceship
-    }
-  | {
-      type: 'MOVE'
-      direction: Direction
     }
 
 const mapMachine = createMachine(
@@ -53,13 +53,14 @@ const mapMachine = createMachine(
           cond: 'isDifferentMouseOverCoordinate',
         },
       ],
-      CLICK: {
+      PIN: {
         actions: 'setCenterMapOnCoordinate',
       },
       FOLLOW_SPACESHIP: {
         actions: ['setFollowingSpaceshipname', 'setCenterMapOnSpaceship'],
+        target: 'followingSpaceship',
       },
-      MOVE: {
+      MOVE_PIN: {
         actions: 'setCenterMapMove',
       },
     },
@@ -72,6 +73,9 @@ const mapMachine = createMachine(
           },
           UNFOLLOW_SPACESHIP: {
             actions: 'clearFollowingSpaceshipname',
+            target: 'centeredOnMap',
+          },
+          MOVE_PIN: {
             target: 'centeredOnMap',
           },
         },

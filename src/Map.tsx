@@ -42,10 +42,10 @@ const Map = memo(({ children, onMouseMove, onClick, centerMapOnCoordinate }: Map
  * Map itself, internally, has nothing that can cause a rerender, because that would bypass the memoization.
  */
 const MapWrapper = ({ children }: PropsWithChildren) => {
-  const { onMouseOver, onClick, centerMapOnCoordinate } = useMap()
+  const { onMouseOver, pin, centerMapOnCoordinate } = useMap()
 
   return (
-    <Map onMouseMove={onMouseOver} onClick={onClick} centerMapOnCoordinate={centerMapOnCoordinate}>
+    <Map onMouseMove={onMouseOver} onClick={pin} centerMapOnCoordinate={centerMapOnCoordinate}>
       {children}
     </Map>
   )

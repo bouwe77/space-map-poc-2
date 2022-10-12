@@ -11,13 +11,10 @@ const MapServiceProvider = ({ children }: PropsWithChildren) => {
   const spaceship = useSpaceship()
 
   const mapService = useInterpret(mapMachine, {
-    actions: {},
     context: {
       followingSpaceshipName: spaceship.name,
       centerMapOnCoordinate: spaceship.position,
     },
-    guards: {},
-    services: {},
   })
 
   return <MapService.Provider value={mapService}>{children}</MapService.Provider>
@@ -25,7 +22,7 @@ const MapServiceProvider = ({ children }: PropsWithChildren) => {
 
 const useMapService = (): InterpreterFrom<typeof mapMachine> => {
   const ctx = useContext(MapService)
-  if (!ctx) throw new Error('Only call useMapService within an MapServiceProvider')
+  if (!ctx) throw new Error('Only call useMapService within a MapServiceProvider')
   return ctx
 }
 
@@ -33,10 +30,12 @@ interface MapHookReturn {
   centerMapOnCoordinate: Coordinate
   mouseOverCoordinate: Coordinate | null
   onMouseOver: (coordinate: Coordinate) => void
-  onClick: (coordinate: Coordinate) => void
+  pin: (coordinate: Coordinate) => void
+  movePin: (direction: Direction) => void
   followSpaceship: (spaceship: Spaceship) => void
   unfollowSpaceship: () => void
-  move: (direction: Direction) => void
+  followingSpaceshipName: string | null
+  followingSpaceshipMoved: (spaceship: Spaceship) => void
 }
 
 export const useMap = (): MapHookReturn => {
@@ -48,37 +47,41 @@ export const useMap = (): MapHookReturn => {
 
   const onMouseOver = useCallback(
     (coordinate: Coordinate) => {
-      //console.log('MOUSE_OVER:', coordinate)
       service.send({ coordinate, type: 'MOUSE_OVER' })
     },
     [service],
   )
 
-  const onClick = useCallback(
+  const pin = useCallback(
     (coordinate: Coordinate) => {
-      //console.log('CLICK:', coordinate)
-      service.send({ coordinate, type: 'CLICK' })
+      service.send({ coordinate, type: 'PIN' })
+    },
+    [service],
+  )
+
+  const movePin = useCallback(
+    (direction: Direction) => {
+      service.send({ type: 'MOVE_PIN', direction })
     },
     [service],
   )
 
   const followSpaceship = useCallback(
     (spaceship: Spaceship) => {
-      // console.log('follow ' + spaceship.name)
       service.send({ type: 'FOLLOW_SPACESHIP', spaceship })
     },
     [service],
   )
 
   const unfollowSpaceship = useCallback(() => {
-    // console.log('unfollow')
     service.send({ type: 'UNFOLLOW_SPACESHIP' })
   }, [service])
 
-  const move = useCallback(
-    (direction: Direction) => {
-      // console.log('move ' + direction)
-      service.send({ type: 'MOVE', direction })
+  const followingSpaceshipName = useSelector(service, (state: MapMachineState) => state.context.followingSpaceshipName)
+
+  const followingSpaceshipMoved = useCallback(
+    (spaceship: Spaceship) => {
+      service.send({ type: 'SPACESHIP_MOVED', spaceship })
     },
     [service],
   )
@@ -87,10 +90,12 @@ export const useMap = (): MapHookReturn => {
     centerMapOnCoordinate,
     mouseOverCoordinate,
     onMouseOver,
-    onClick,
+    pin,
+    movePin,
     followSpaceship,
     unfollowSpaceship,
-    move,
+    followingSpaceshipName,
+    followingSpaceshipMoved,
   }
 }
 

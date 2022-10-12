@@ -12,7 +12,6 @@ const getMouseEventHandler = (element: SVGSVGElement, callback: (coordinate: Coo
     pt = pt.matrixTransform(element.getScreenCTM().inverse())
 
     const coordinate: Coordinate = { x: pt.x, y: pt.y }
-    console.log(coordinate)
     callback(coordinate)
   }
 

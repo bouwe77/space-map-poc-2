@@ -1,6 +1,20 @@
+import { useState } from 'react'
 import { Spaceship } from './types'
+import useInterval from './useInterval'
 
-const spaceships = [
+const move = (spaceship: Spaceship) => {
+  const moveIt = {
+    Defiant: (spaceship: Spaceship) => {
+      return { ...spaceship, position: { ...spaceship.position, x: spaceship.position.x + 10 } }
+    },
+    Voyager: (spaceship: Spaceship) => {
+      return { ...spaceship, position: { x: spaceship.position.x - 10, y: spaceship.position.y + 10 } }
+    },
+  }
+  return spaceship.name in moveIt ? moveIt[spaceship.name](spaceship) : () => spaceship
+}
+
+const initialSpaceships = [
   {
     name: 'Enterprise',
     position: { x: 0, y: 0 },
@@ -22,6 +36,16 @@ const spaceships = [
  * Returns all spaceships.
  */
 export const useSpaceships = (): Spaceship[] => {
+  const [spaceships, setSpaceships] = useState(initialSpaceships)
+
+  useInterval(() => {
+    setSpaceships(
+      spaceships.map((s) => {
+        return { ...s, ...move(s) }
+      }),
+    )
+  }, 1000)
+
   return spaceships
 }
 
@@ -29,5 +53,5 @@ export const useSpaceships = (): Spaceship[] => {
  * Returns the current user's spaceship.
  */
 export const useSpaceship = () => {
-  return spaceships[0]
+  return initialSpaceships[0]
 }
